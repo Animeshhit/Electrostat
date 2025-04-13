@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { View, TouchableOpacity, Animated, StyleSheet } from "react-native";
+import { TouchableOpacity, Animated, StyleSheet } from "react-native";
 
 interface ToggleSwitchProps {
   isOn: boolean;

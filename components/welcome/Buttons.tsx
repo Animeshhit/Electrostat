@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+
+import { View,  StyleSheet } from "react-native";
 import Button from "./Button";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";

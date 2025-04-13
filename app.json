@@ -18,9 +18,9 @@
     },
     "android": {
       "adaptiveIcon": {
-     
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.electrostat"
     },
     "web": {
       "bundler": "metro",
@@ -31,7 +31,12 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "tsconfigPaths":true
+      "tsconfigPaths": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c78388c6-f529-44ad-920c-93d3f0d2a7c7"
+      }
     }
   }
 }
