@@ -10,6 +10,7 @@ interface ButtonProps {
   roomName: string;
   roomPower: number;
   IconComponent: () => JSX.Element;
+  status: boolean;
 }
 
 const RoomButton = (props: ButtonProps) => {
@@ -52,7 +53,7 @@ const RoomButton = (props: ButtonProps) => {
                 <Path d="m422-232 207-248H469l29-227-185 267h139l-30 208ZM320-80l40-280H160l360-520h80l-40 320h240L400-80h-80Zm151-390Z" />
               </Svg>
               <Text style={{ fontSize: 11, marginTop: 2 }}>
-                {props.roomPower} W
+                {props.status ? props.roomPower : 0} W
               </Text>
             </View>
           </View>
@@ -62,12 +63,19 @@ const RoomButton = (props: ButtonProps) => {
           style={[
             styles.status,
             {
-              backgroundColor: Colors.light.lightGreen,
+              backgroundColor: props.status
+                ? Colors.light.lightGreen
+                : Colors.light.lightRed,
             },
           ]}
         >
-          <Text style={[styles.statusText, { color: Colors.light.green }]}>
-            Active
+          <Text
+            style={[
+              styles.statusText,
+              { color: props.status ? Colors.light.green : "red" },
+            ]}
+          >
+            {props.status ? "Active" : " Inactive"}
           </Text>
         </View>
       </View>

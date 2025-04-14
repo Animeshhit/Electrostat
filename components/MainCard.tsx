@@ -1,5 +1,4 @@
 import { StyleSheet, View, Text } from "react-native";
-import React, { useState, useEffect } from "react";
 import { useColorScheme } from "react-native";
 import ToggleSwitch from "components/ToggleSwitch";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -11,32 +10,22 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import UtilsStyles from "constants/utils";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-// firebase
-import { ref, onValue } from "firebase/database";
-import { database } from "../lib/firebase";
-const MainCard = () => {
+interface MainCardProps {
+  mainSwitch: boolean;
+  setMainSwitch: React.Dispatch<React.SetStateAction<boolean>>;
+  voltage: number;
+  powerConsumption: number;
+  wifiMode: boolean;
+}
+
+const MainCard = ({
+  mainSwitch,
+  setMainSwitch,
+  voltage,
+  powerConsumption,
+  wifiMode,
+}: MainCardProps) => {
   const colorScheme = useColorScheme();
-
-  const [mainSwitch, setMainSwitch] = useState(false);
-  const [voltage, setVoltage] = useState(0);
-  const [powerConsumption, setPowerConsumption] = useState(0);
-  const [wifiMode, setWifiMode] = useState(false);
-
-  // // Listen for voltage value in real-time
-  useEffect(() => {
-    const dashboardRef = ref(database, "dashboard");
-    const unsubscribe = onValue(dashboardRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data !== null) {
-        setVoltage(data.currentVoltage || 0);
-        setPowerConsumption(data.powerConsumption || 0);
-        setMainSwitch(data.powerStatus || false);
-        setWifiMode(data.online || false);
-      }
-    });
-
-    return () => unsubscribe(); // Clean up listener on unmount
-  }, []);
 
   return (
     <View
@@ -144,7 +133,7 @@ const MainCard = () => {
           <Ionicons
             name="settings"
             size={18}
-            color={mainSwitch ? Colors.light.green : "gray"}
+            color={wifiMode ? Colors.light.green : "gray"}
           />
           <Text style={{ fontWeight: "500" }}>Status</Text>
         </View>
@@ -152,7 +141,7 @@ const MainCard = () => {
           style={[
             styles.status,
             {
-              backgroundColor: mainSwitch
+              backgroundColor: wifiMode
                 ? Colors.light.lightGreen
                 : Colors.light.lightRed,
             },
@@ -161,10 +150,10 @@ const MainCard = () => {
           <Text
             style={[
               styles.statusText,
-              { color: mainSwitch ? Colors.light.green : "red" },
+              { color: wifiMode ? Colors.light.green : "red" },
             ]}
           >
-            {mainSwitch ? "Active" : " Inactive"}
+            {wifiMode ? "Active" : " Inactive"}
           </Text>
         </View>
       </View>
