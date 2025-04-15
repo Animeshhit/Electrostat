@@ -12,7 +12,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
-  initialRouteName: "welcome",
+  initialRouteName: "index",
 };
 
 export default function RootLayout() {

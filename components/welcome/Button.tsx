@@ -90,9 +90,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 7,
     width: "100%",
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.1)",
-    // iOS shadow
     shadowColor: "rgba(0,0,0,0.3)",
     shadowOffset: {
       width: 0,

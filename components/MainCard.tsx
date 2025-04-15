@@ -31,7 +31,12 @@ const MainCard = ({
     <View
       style={[
         styles.card,
-        { backgroundColor: colorScheme === "dark" ? "#000" : "#fff" },
+        {
+          backgroundColor: colorScheme === "dark" ? "#000" : "#fff",
+          borderColor:
+            colorScheme == "dark" ? "rgba(255,255,255,0.6)" : "transparent",
+          borderWidth: colorScheme == "dark" ? 0.2 : 0,
+        },
       ]}
     >
       {/* cardHeader */}
@@ -50,13 +55,33 @@ const MainCard = ({
             size={18}
             color={mainSwitch ? Colors.light.green : "red"}
           />
-          <Text style={[styles.cardHeaderTitle]}>Power Status</Text>
+          <Text
+            style={[
+              styles.cardHeaderTitle,
+              {
+                color:
+                  colorScheme == "light" ? Colors.light.text : Colors.dark.text,
+              },
+            ]}
+          >
+            Power Status
+          </Text>
         </View>
         <ToggleSwitch isOn={mainSwitch} setIsOn={setMainSwitch} />
       </View>
 
       {/* voltage card */}
-      <View style={[styles.voltageCard]}>
+      <View
+        style={[
+          styles.voltageCard,
+          {
+            borderColor:
+              colorScheme === "dark"
+                ? "rgba(255,255,255,0.6)"
+                : "rgba(0,0,0,0.2)",
+          },
+        ]}
+      >
         <View
           style={[UtilsStyles.flex, UtilsStyles.alignItemsCenter, { gap: 4 }]}
         >
@@ -68,7 +93,17 @@ const MainCard = ({
           >
             <Path d="m422-232 207-248H469l29-227-185 267h139l-30 208ZM320-80l40-280H160l360-520h80l-40 320h240L400-80h-80Zm151-390Z" />
           </Svg>
-          <Text style={[styles.voltageCardHeaderTitle]}>Current Voltage</Text>
+          <Text
+            style={[
+              styles.voltageCardHeaderTitle,
+              {
+                color:
+                  colorScheme == "light" ? Colors.light.text : Colors.dark.text,
+              },
+            ]}
+          >
+            Current Voltage
+          </Text>
         </View>
         <View
           style={[
@@ -78,15 +113,48 @@ const MainCard = ({
           ]}
         >
           <Text
-            style={[styles.value, { color: mainSwitch ? "black" : "gray" }]}
+            style={[
+              styles.value,
+              {
+                color: mainSwitch
+                  ? colorScheme == "light"
+                    ? Colors.light.text
+                    : Colors.dark.text
+                  : "gray",
+              },
+            ]}
           >
             {mainSwitch ? voltage : 0}
           </Text>
-          <Text style={[styles.smallValue]}>V</Text>
+          <Text
+            style={[
+              styles.smallValue,
+              {
+                color: mainSwitch
+                  ? colorScheme == "light"
+                    ? Colors.light.text
+                    : Colors.dark.text
+                  : "gray",
+              },
+            ]}
+          >
+            V
+          </Text>
         </View>
       </View>
       {/* {currentCard} */}
-      <View style={[styles.voltageCard, { marginTop: 16 }]}>
+      <View
+        style={[
+          styles.voltageCard,
+          {
+            marginTop: 16,
+            borderColor:
+              colorScheme === "dark"
+                ? "rgba(255,255,255,0.6)"
+                : "rgba(0,0,0,0.2)",
+          },
+        ]}
+      >
         <View
           style={[UtilsStyles.flex, UtilsStyles.alignItemsCenter, { gap: 4 }]}
         >
@@ -94,12 +162,22 @@ const MainCard = ({
             height="18px"
             viewBox="0 -960 960 960"
             width="18px"
-            fill={mainSwitch ? "blue" : "gray"}
+            fill={mainSwitch ? "#068FFF" : "gray"}
           >
             <Path d="m140-220-60-60 300-300 160 160 284-320 56 56-340 384-160-160-240 240Z" />
           </Svg>
 
-          <Text style={[styles.voltageCardHeaderTitle]}>Power Consumption</Text>
+          <Text
+            style={[
+              styles.voltageCardHeaderTitle,
+              {
+                color:
+                  colorScheme == "light" ? Colors.light.text : Colors.dark.text,
+              },
+            ]}
+          >
+            Power Consumption
+          </Text>
         </View>
         <View
           style={[
@@ -109,11 +187,33 @@ const MainCard = ({
           ]}
         >
           <Text
-            style={[styles.value, { color: mainSwitch ? "black" : "gray" }]}
+            style={[
+              styles.value,
+              {
+                color: mainSwitch
+                  ? colorScheme == "light"
+                    ? Colors.light.text
+                    : Colors.dark.text
+                  : "gray",
+              },
+            ]}
           >
             {mainSwitch ? powerConsumption : 0}
           </Text>
-          <Text style={[styles.smallValue]}>W</Text>
+          <Text
+            style={[
+              styles.smallValue,
+              {
+                color: mainSwitch
+                  ? colorScheme == "light"
+                    ? Colors.light.text
+                    : Colors.dark.text
+                  : "gray",
+              },
+            ]}
+          >
+            W
+          </Text>
         </View>
       </View>
       {/* statusCard */}
@@ -124,7 +224,13 @@ const MainCard = ({
           UtilsStyles.justifyContentSapceBetween,
           UtilsStyles.alignItemsCenter,
           styles.voltageCard,
-          { marginTop: 16 },
+          {
+            marginTop: 16,
+            borderColor:
+              colorScheme === "dark"
+                ? "rgba(255,255,255,0.6)"
+                : "rgba(0,0,0,0.2)",
+          },
         ]}
       >
         <View
@@ -135,7 +241,15 @@ const MainCard = ({
             size={18}
             color={wifiMode ? Colors.light.green : "gray"}
           />
-          <Text style={{ fontWeight: "500" }}>Status</Text>
+          <Text
+            style={{
+              fontWeight: "500",
+              color:
+                colorScheme == "light" ? Colors.light.text : Colors.dark.text,
+            }}
+          >
+            Status
+          </Text>
         </View>
         <View
           style={[
@@ -175,17 +289,41 @@ const MainCard = ({
           ]}
         >
           {wifiMode ? (
-            <FontAwesome5 name="wifi" size={15} color="black" />
+            <FontAwesome5
+              name="wifi"
+              size={15}
+              color={
+                colorScheme === "light" ? Colors.light.text : Colors.dark.text
+              }
+            />
           ) : (
-            <Ionicons name="cellular" size={15} color="black" />
+            <Ionicons
+              name="cellular"
+              size={15}
+              color={
+                colorScheme === "light" ? Colors.light.text : Colors.dark.text
+              }
+            />
           )}
 
-          <Text style={{ fontSize: 12 }}>
+          <Text
+            style={{
+              fontSize: 12,
+              color:
+                colorScheme == "light" ? Colors.light.text : Colors.dark.text,
+            }}
+          >
             {wifiMode ? "WIFI Mode" : "AP Mode"}
           </Text>
         </View>
         <TouchableOpacity>
-          <EvilIcons name="refresh" size={24} color="black" />
+          <EvilIcons
+            name="refresh"
+            size={24}
+            color={
+              colorScheme === "light" ? Colors.light.text : Colors.dark.text
+            }
+          />
         </TouchableOpacity>
       </View>
     </View>
