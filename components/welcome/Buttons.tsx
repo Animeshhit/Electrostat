@@ -12,7 +12,7 @@ import { database } from "../../lib/firebase";
 const dummyData = {
   name: "room name",
   power: 34,
-  status: false,
+  status: 0,
 };
 
 const Buttons = () => {

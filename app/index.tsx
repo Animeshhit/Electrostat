@@ -16,10 +16,10 @@ export default function WelcomeScreen() {
   const colorSchema = useColorScheme();
   const themeColor = Colors[colorSchema ?? "light"];
 
-  const [mainSwitch, setMainSwitch] = useState(false);
+  const [mainSwitch, setMainSwitch] = useState(0);
   const [voltage, setVoltage] = useState(0);
   const [powerConsumption, setPowerConsumption] = useState(0);
-  const [wifiMode, setWifiMode] = useState(false);
+  const [wifiMode, setWifiMode] = useState(0);
 
   const isFirstRun = useRef(true);
 
@@ -28,10 +28,10 @@ export default function WelcomeScreen() {
     const unsubscribe = onValue(dashboardRef, (snapshot) => {
       const data = snapshot.val();
       if (data !== null) {
-        setVoltage(data.currentVoltage || 0);
-        setPowerConsumption(data.powerConsumption || 0);
-        setMainSwitch(data.powerStatus || false);
-        setWifiMode(data.online || false);
+        setVoltage(Math.round(data.currentVoltage) || 0);
+        setPowerConsumption(Math.round(data.powerConsumption) || 0);
+        setMainSwitch(data.powerStatus || 0);
+        setWifiMode(data.online || 0);
       }
     });
 

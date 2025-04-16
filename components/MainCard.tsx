@@ -9,13 +9,14 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import UtilsStyles from "constants/utils";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Status from "./Status";
 
 interface MainCardProps {
-  mainSwitch: boolean;
-  setMainSwitch: React.Dispatch<React.SetStateAction<boolean>>;
+  mainSwitch: number;
+  setMainSwitch: React.Dispatch<React.SetStateAction<number>>;
   voltage: number;
   powerConsumption: number;
-  wifiMode: boolean;
+  wifiMode: number;
 }
 
 const MainCard = ({
@@ -251,25 +252,7 @@ const MainCard = ({
             Status
           </Text>
         </View>
-        <View
-          style={[
-            styles.status,
-            {
-              backgroundColor: wifiMode
-                ? Colors.light.lightGreen
-                : Colors.light.lightRed,
-            },
-          ]}
-        >
-          <Text
-            style={[
-              styles.statusText,
-              { color: wifiMode ? Colors.light.green : "red" },
-            ]}
-          >
-            {wifiMode ? "Active" : " Inactive"}
-          </Text>
-        </View>
+        <Status status={wifiMode} />
       </View>
 
       {/* updateStatus */}
@@ -364,15 +347,6 @@ const styles = StyleSheet.create({
   },
 
   smallValue: { fontSize: 16, color: "rgba(0,0,0,0.6)" },
-  status: {
-    paddingVertical: 5,
-    borderRadius: 25,
-    paddingHorizontal: 10,
-  },
-  statusText: {
-    fontWeight: "500",
-    fontSize: 12,
-  },
 });
 
 export default MainCard;

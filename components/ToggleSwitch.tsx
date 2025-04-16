@@ -2,8 +2,8 @@ import React, { useRef, useEffect } from "react";
 import { TouchableOpacity, Animated, StyleSheet } from "react-native";
 
 interface ToggleSwitchProps {
-  isOn: boolean;
-  setIsOn?: (value: boolean) => void;
+  isOn: number;
+  setIsOn?: (value: number) => void;
 }
 
 const ToggleSwitch = ({ isOn, setIsOn }: ToggleSwitchProps) => {
@@ -20,7 +20,7 @@ const ToggleSwitch = ({ isOn, setIsOn }: ToggleSwitchProps) => {
 
   const toggleSwitch = () => {
     if (setIsOn) {
-      setIsOn(!isOn);
+      setIsOn(isOn == 0 ? 1 : 0);
     }
   };
 

@@ -1,22 +1,43 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  View,
+  useColorScheme,
+} from "react-native";
 
 import Svg, { Path } from "react-native-svg";
 import Colors from "constants/Colors";
 import UtilsStyles from "constants/utils";
+import Status from "components/Status";
 
 interface ButtonProps {
   onPress: () => void;
   roomName: string;
   roomPower: number;
   IconComponent: () => JSX.Element;
-  status: boolean;
+  status: number;
 }
 
 const RoomButton = (props: ButtonProps) => {
+  const ColorSchema = useColorScheme();
   return (
     <TouchableOpacity
-      style={styles.button}
+      style={[
+        styles.button,
+        {
+          backgroundColor:
+            ColorSchema == "light" ? Colors.light.background : "black",
+          shadowColor: ColorSchema == "light" ? "rgba(0,0,0,0.3)" : "",
+          borderWidth: 0.5,
+          borderStyle: "solid",
+          borderColor:
+            ColorSchema == "light"
+              ? "rgba(0,0,0,0.2)"
+              : "rgba(255,255,255,0.2)",
+        },
+      ]}
       onPress={props.onPress}
       activeOpacity={0.8}
     >
@@ -32,7 +53,10 @@ const RoomButton = (props: ButtonProps) => {
         >
           <View
             style={{
-              backgroundColor: "#EFEFEF",
+              backgroundColor:
+                ColorSchema == "light"
+                  ? Colors.light.background
+                  : Colors.dark.background,
               padding: 10,
               borderRadius: 50,
             }}
@@ -40,7 +64,14 @@ const RoomButton = (props: ButtonProps) => {
             {props.IconComponent()}
           </View>
           <View>
-            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 20,
+                color:
+                  ColorSchema == "light" ? Colors.light.text : Colors.dark.text,
+              }}
+            >
               {props.roomName}
             </Text>
             <View style={[UtilsStyles.flex, UtilsStyles.alignItemsCenter]}>
@@ -52,32 +83,23 @@ const RoomButton = (props: ButtonProps) => {
               >
                 <Path d="m422-232 207-248H469l29-227-185 267h139l-30 208ZM320-80l40-280H160l360-520h80l-40 320h240L400-80h-80Zm151-390Z" />
               </Svg>
-              <Text style={{ fontSize: 11, marginTop: 2 }}>
-                {props.status ? props.roomPower : 0} W
+              <Text
+                style={{
+                  fontSize: 11,
+                  marginTop: 2,
+                  color:
+                    ColorSchema == "light"
+                      ? Colors.light.text
+                      : Colors.dark.text,
+                }}
+              >
+                {props.status ? Math.round(props.roomPower) : 0} W
               </Text>
             </View>
           </View>
         </View>
 
-        <View
-          style={[
-            styles.status,
-            {
-              backgroundColor: props.status
-                ? Colors.light.lightGreen
-                : Colors.light.lightRed,
-            },
-          ]}
-        >
-          <Text
-            style={[
-              styles.statusText,
-              { color: props.status ? Colors.light.green : "red" },
-            ]}
-          >
-            {props.status ? "Active" : " Inactive"}
-          </Text>
-        </View>
+        <Status status={props.status} />
       </View>
     </TouchableOpacity>
   );
@@ -85,12 +107,11 @@ const RoomButton = (props: ButtonProps) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "white",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 7,
     width: "100%",
-    shadowColor: "rgba(0,0,0,0.3)",
+
     shadowOffset: {
       width: 0,
       height: 2,
