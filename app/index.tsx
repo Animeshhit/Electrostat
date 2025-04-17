@@ -21,10 +21,24 @@ export default function WelcomeScreen() {
   const [voltage, setVoltage] = useState(0);
   const [powerConsumption, setPowerConsumption] = useState(0);
 
-  const { setStatus, togglePower, status, powerStatus } = useStore();
+  const {
+    setStatus,
+    togglePower,
+    status,
+    powerStatus,
+    underVoltage,
+    surge,
+    earthFault,
+    overCurrent,
+    setEarthFault,
+    setOverCurrent,
+    setUnderVoltage,
+    setSurge,
+  } = useStore();
 
   const isFirstRun = useRef(true);
 
+  //set voltage and current
   useEffect(() => {
     const dashboardRef = ref(database, "dashboard");
 
@@ -41,12 +55,12 @@ export default function WelcomeScreen() {
     return () => unsubscribe(); // Clean up listener on unmount
   }, []);
 
+  //getting the mainSwitch on
   useEffect(() => {
     const rooms = ref(database, "rooms");
     const unsubscribe = onValue(rooms, (snapshot) => {
       const data = snapshot.val();
       if (data !== null) {
-        console.log(data.powerStatus);
         togglePower(data.powerStatus);
       }
     });
@@ -88,7 +102,51 @@ export default function WelcomeScreen() {
         console.error("Failed to update powerStatus:", error);
       });
     }
-  }, [powerStatus]);
+  }, [powerStatus, earthFault, underVoltage, surge]);
+
+  // fault
+  useEffect(() => {
+    const data = ref(database, "protection");
+    const unsubscribe = onValue(data, (snap) => {
+      const info = snap.val();
+      if (info !== null) {
+        setEarthFault(info.earthfault);
+        setSurge(info.surge);
+        setUnderVoltage(info.underVoltage);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const roomsRef = ref(database, "rooms");
+    const officeRef = ref(database, "rooms/office");
+    const livingRef = ref(database, "rooms/living");
+    const kitchenRef = ref(database, "rooms/kitchen");
+    if (earthFault === 1 || surge === 1 || underVoltage === 1) {
+      update(roomsRef, {
+        powerStatus: 0,
+      }).catch((error) => {
+        console.error("Failed to update powerStatus:", error);
+      });
+      update(livingRef, {
+        status: 0,
+      }).catch((error) => {
+        console.error("Failed to update powerStatus:", error);
+      });
+      update(officeRef, {
+        status: 0,
+      }).catch((error) => {
+        console.error("Failed to update powerStatus:", error);
+      });
+      update(kitchenRef, {
+        status: 0,
+      }).catch((error) => {
+        console.error("Failed to update powerStatus:", error);
+      });
+    }
+  }, [earthFault, surge, underVoltage]);
 
   return (
     <SafeAreaView
@@ -97,7 +155,10 @@ export default function WelcomeScreen() {
         { backgroundColor: themeColor.background },
       ]}
     >
-      <ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
         <HeaderText text="Dashboard" />
         <MainCard
           mainSwitch={powerStatus}
@@ -107,10 +168,10 @@ export default function WelcomeScreen() {
           wifiMode={status}
         />
         <Buttons />
-        <FaultCard faultName="Earth Fault" fault={1} />
-        <FaultCard faultName="Over Current" fault={0} />
-        <FaultCard faultName="Under Voltage" fault={0}/>
-        <FaultCard faultName="Surge" fault={0} />
+        <FaultCard faultName="Earth Fault" fault={earthFault} />
+        <FaultCard faultName="Over Current" fault={overCurrent} />
+        <FaultCard faultName="Under Voltage" fault={underVoltage} />
+        <FaultCard faultName="Surge" fault={surge} />
       </ScrollView>
     </SafeAreaView>
   );
