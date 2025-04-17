@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text } from "react-native";
 import { useColorScheme } from "react-native";
-import ToggleSwitch from "components/ToggleSwitch";
+import ToggleSwitchForRoom from "./ToggleSwitchForRoom";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Colors from "constants/Colors";
 import Svg, { Path } from "react-native-svg";
@@ -10,24 +10,23 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import UtilsStyles from "constants/utils";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import StatusCard from "./Status";
-
 import { Status } from "types/type";
 
-interface MainCardProps {
-  mainSwitch: Status;
-  setMainSwitch: (value: Status) => void;
-  voltage: number;
+interface RoomCardProps {
+  roomSwitch: Status;
+  setRoomSwtich: React.Dispatch<React.SetStateAction<Status>>;
+  current: number;
   powerConsumption: number;
   wifiMode: Status;
 }
 
 const MainCard = ({
-  mainSwitch,
-  setMainSwitch,
-  voltage,
+  roomSwitch,
+  setRoomSwtich,
+  current,
   powerConsumption,
   wifiMode,
-}: MainCardProps) => {
+}: RoomCardProps) => {
   const colorScheme = useColorScheme();
 
   return (
@@ -56,7 +55,7 @@ const MainCard = ({
           <AntDesign
             name="poweroff"
             size={18}
-            color={mainSwitch ? Colors.light.green : "red"}
+            color={roomSwitch ? Colors.light.green : "red"}
           />
           <Text
             style={[
@@ -70,7 +69,7 @@ const MainCard = ({
             Power Status
           </Text>
         </View>
-        <ToggleSwitch isOn={mainSwitch} setIsOn={setMainSwitch} />
+        <ToggleSwitchForRoom isOn={roomSwitch} setIsOn={setRoomSwtich} />
       </View>
 
       {/* voltage card */}
@@ -92,7 +91,7 @@ const MainCard = ({
             height="18px"
             viewBox="0 -960 960 960"
             width="18px"
-            fill={mainSwitch ? "orange" : "gray"}
+            fill={roomSwitch ? "orange" : "gray"}
           >
             <Path d="m422-232 207-248H469l29-227-185 267h139l-30 208ZM320-80l40-280H160l360-520h80l-40 320h240L400-80h-80Zm151-390Z" />
           </Svg>
@@ -105,7 +104,7 @@ const MainCard = ({
               },
             ]}
           >
-            Current Voltage
+            Present Current
           </Text>
         </View>
         <View
@@ -119,7 +118,7 @@ const MainCard = ({
             style={[
               styles.value,
               {
-                color: mainSwitch
+                color: roomSwitch
                   ? colorScheme == "light"
                     ? Colors.light.text
                     : Colors.dark.text
@@ -127,13 +126,13 @@ const MainCard = ({
               },
             ]}
           >
-            {mainSwitch ? voltage : 0}
+            {roomSwitch ? current : 0}
           </Text>
           <Text
             style={[
               styles.smallValue,
               {
-                color: mainSwitch
+                color: roomSwitch
                   ? colorScheme == "light"
                     ? Colors.light.text
                     : Colors.dark.text
@@ -141,7 +140,7 @@ const MainCard = ({
               },
             ]}
           >
-            V
+            A
           </Text>
         </View>
       </View>
@@ -165,7 +164,7 @@ const MainCard = ({
             height="18px"
             viewBox="0 -960 960 960"
             width="18px"
-            fill={mainSwitch ? "#068FFF" : "gray"}
+            fill={roomSwitch ? "#068FFF" : "gray"}
           >
             <Path d="m140-220-60-60 300-300 160 160 284-320 56 56-340 384-160-160-240 240Z" />
           </Svg>
@@ -193,7 +192,7 @@ const MainCard = ({
             style={[
               styles.value,
               {
-                color: mainSwitch
+                color: roomSwitch
                   ? colorScheme == "light"
                     ? Colors.light.text
                     : Colors.dark.text
@@ -201,13 +200,13 @@ const MainCard = ({
               },
             ]}
           >
-            {mainSwitch ? powerConsumption : 0}
+            {roomSwitch ? powerConsumption : 0}
           </Text>
           <Text
             style={[
               styles.smallValue,
               {
-                color: mainSwitch
+                color: roomSwitch
                   ? colorScheme == "light"
                     ? Colors.light.text
                     : Colors.dark.text

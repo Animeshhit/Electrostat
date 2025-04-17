@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { TouchableOpacity, Animated, StyleSheet } from "react-native";
+import useStore from "store/store";
 import { Status } from "types/type";
 
 interface ToggleSwitchProps {
@@ -7,8 +8,10 @@ interface ToggleSwitchProps {
   setIsOn?: (value: Status) => void;
 }
 
-const ToggleSwitch = ({ isOn, setIsOn }: ToggleSwitchProps) => {
+const ToggleSwitchForRoom = ({ isOn, setIsOn }: ToggleSwitchProps) => {
   const animValue = useRef(new Animated.Value(isOn ? 1 : 0)).current;
+
+  const { powerStatus } = useStore();
 
   // Sync animation with external isOn value
   useEffect(() => {
@@ -20,7 +23,7 @@ const ToggleSwitch = ({ isOn, setIsOn }: ToggleSwitchProps) => {
   }, [isOn]);
 
   const toggleSwitch = () => {
-    if (setIsOn) {
+    if (setIsOn && powerStatus) {
       setIsOn(isOn == 0 ? 1 : 0);
     }
   };
@@ -72,4 +75,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ToggleSwitch;
+export default ToggleSwitchForRoom;

@@ -6,12 +6,14 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 
 //firebase
-import { ref, onValue, update, off } from "firebase/database";
+import { ref, onValue } from "firebase/database";
 import { database } from "../../lib/firebase";
+
+import useStore from "store/store";
 
 const dummyData = {
   name: "room name",
-  power: 34,
+  power: 0,
   status: 0,
 };
 
@@ -20,6 +22,8 @@ const Buttons = () => {
   const [kitchen, setKitchen] = useState(dummyData);
   const [living, setLiving] = useState(dummyData);
   const [office, setOffice] = useState(dummyData);
+
+  const { powerStatus } = useStore();
 
   useEffect(() => {
     const roomsRef = ref(database, "rooms");
@@ -41,7 +45,7 @@ const Buttons = () => {
         IconComponent={() => <Feather name="tv" size={18} color="gray" />}
         roomName={living.name}
         roomPower={living.power}
-        status={living.status}
+        status={powerStatus ? living.status : 0}
         onPress={() => {
           router.push("/living");
         }} // Navigate to the living room screen
@@ -51,7 +55,7 @@ const Buttons = () => {
           <FontAwesome name="cutlery" size={18} color="gray" />
         )}
         roomName={kitchen.name}
-        status={kitchen.status}
+        status={powerStatus ? kitchen.status : 0}
         roomPower={kitchen.power}
         onPress={() => {
           router.push("/kitchen");
@@ -62,7 +66,7 @@ const Buttons = () => {
           <FontAwesome name="suitcase" size={18} color="gray" />
         )}
         roomName={office.name}
-        status={office.status}
+        status={powerStatus ? office.status : 0}
         roomPower={office.power}
         onPress={() => {
           router.push("/office");

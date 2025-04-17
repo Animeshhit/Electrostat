@@ -11,31 +11,46 @@ import React, { useState, useEffect, useRef } from "react";
 import { ref, onValue, update } from "firebase/database";
 import { database } from "../lib/firebase";
 import { ScrollView } from "react-native-gesture-handler";
+import useStore from "store/store";
+import FaultCard from "components/FaultCard";
 
 export default function WelcomeScreen() {
   const colorSchema = useColorScheme();
   const themeColor = Colors[colorSchema ?? "light"];
 
-  const [mainSwitch, setMainSwitch] = useState(0);
   const [voltage, setVoltage] = useState(0);
   const [powerConsumption, setPowerConsumption] = useState(0);
-  const [wifiMode, setWifiMode] = useState(0);
+
+  const { setStatus, togglePower, status, powerStatus } = useStore();
 
   const isFirstRun = useRef(true);
 
   useEffect(() => {
     const dashboardRef = ref(database, "dashboard");
+
     const unsubscribe = onValue(dashboardRef, (snapshot) => {
       const data = snapshot.val();
       if (data !== null) {
         setVoltage(Math.round(data.currentVoltage) || 0);
         setPowerConsumption(Math.round(data.powerConsumption) || 0);
-        setMainSwitch(data.powerStatus || 0);
-        setWifiMode(data.online || 0);
+
+        setStatus(data.online || 0);
       }
     });
 
     return () => unsubscribe(); // Clean up listener on unmount
+  }, []);
+
+  useEffect(() => {
+    const rooms = ref(database, "rooms");
+    const unsubscribe = onValue(rooms, (snapshot) => {
+      const data = snapshot.val();
+      if (data !== null) {
+        console.log(data.powerStatus);
+        togglePower(data.powerStatus);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   // Write powerStatus to Firebase when mainSwitch changes (skip first load)
@@ -44,13 +59,36 @@ export default function WelcomeScreen() {
       isFirstRun.current = false;
       return;
     }
-    const dashboardRef = ref(database, "dashboard");
-    update(dashboardRef, {
-      powerStatus: mainSwitch,
+    const roomsRef = ref(database, "rooms");
+    const officeRef = ref(database, "rooms/office");
+    const livingRef = ref(database, "rooms/living");
+    const kitchenRef = ref(database, "rooms/kitchen");
+
+    update(roomsRef, {
+      powerStatus: powerStatus,
     }).catch((error) => {
       console.error("Failed to update powerStatus:", error);
     });
-  }, [mainSwitch]);
+
+    if (powerStatus == 0) {
+      update(officeRef, {
+        status: powerStatus,
+      }).catch((error) => {
+        console.error("Failed to update powerStatus:", error);
+      });
+
+      update(livingRef, {
+        status: powerStatus,
+      }).catch((error) => {
+        console.error("Failed to update powerStatus:", error);
+      });
+      update(kitchenRef, {
+        status: powerStatus,
+      }).catch((error) => {
+        console.error("Failed to update powerStatus:", error);
+      });
+    }
+  }, [powerStatus]);
 
   return (
     <SafeAreaView
@@ -62,13 +100,17 @@ export default function WelcomeScreen() {
       <ScrollView>
         <HeaderText text="Dashboard" />
         <MainCard
-          mainSwitch={mainSwitch}
-          setMainSwitch={setMainSwitch}
+          mainSwitch={powerStatus}
+          setMainSwitch={togglePower}
           voltage={voltage}
           powerConsumption={powerConsumption}
-          wifiMode={wifiMode}
+          wifiMode={status}
         />
         <Buttons />
+        <FaultCard faultName="Earth Fault" fault={1} />
+        <FaultCard faultName="Over Current" fault={0} />
+        <FaultCard faultName="Under Voltage" fault={0}/>
+        <FaultCard faultName="Surge" fault={0} />
       </ScrollView>
     </SafeAreaView>
   );
